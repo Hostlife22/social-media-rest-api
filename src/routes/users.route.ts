@@ -1,22 +1,24 @@
 import bcrypt from 'bcrypt';
 import { Request, Response, Router } from 'express';
+import { CustomUpdateRequest } from 'src/utils/interface';
 import User from '../models/user.model';
 
 const router = Router();
 
 // update user
 router.put('/:id', async (req: Request, res: Response) => {
-  if (req.body.userId === req.params.id || req.user.isAdmin) {
-    if (req.body.password) {
+	const {body, user, params } = req as CustomUpdateRequest
+  if (body.userId === params.id || user.isAdmin) {
+    if (body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
-        req.body.password = await bcrypt.hash(req.body.password, salt);
+        req.body.password = await bcrypt.hash(body.password, salt);
       } catch (err) {
         return res.status(500).json(err);
       }
     }
     try {
-      await User.findByIdAndUpdate(req.params.id, {
+      await User.findByIdAndUpdate(params.id, {
         $set: req.body,
       });
 
@@ -38,3 +40,5 @@ router.put('/:id', async (req: Request, res: Response) => {
 // unfollow a user
 
 export default router;
+
+

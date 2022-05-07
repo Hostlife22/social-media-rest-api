@@ -1,10 +1,8 @@
 import bcrypt from 'bcrypt';
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
+import { CustomRequest } from 'src/utils/interface';
 import User, { UserDocument } from '../models/user.model';
 
-interface CustomRequest<T> extends Request {
-  body: T;
-}
 
 const router = Router();
 

@@ -8,3 +8,10 @@ export interface CustomRequest<T> extends Request {
 export interface CustomUpdateRequest extends Request {
 	user: UserDocument
 }
+
+export interface IBody {
+	userId: string;
+	isAdmin?: boolean
+} 
+
+export interface CustomDeleteRequest extends CustomRequest<IBody> {}

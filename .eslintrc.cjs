@@ -18,5 +18,6 @@ module.exports = {
     'import/extensions': 'off',
     'no-console': 'off',
     'no-unused-expressions': 'off',
+    'no-underscore-dangle': 'off',
   },
 };

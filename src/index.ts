@@ -10,7 +10,7 @@ import userRoute from './routes/users.route';
 dotenv.config();
 
 const app = express();
-const PORT = 8080;
+const PORT = 5000;
 
 mongoose.connect(process.env.MONGO_URL as string, () => {
   console.log('Connected to MongoDb');

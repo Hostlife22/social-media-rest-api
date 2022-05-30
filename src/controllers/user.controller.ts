@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import User from '../models/user.model';
+import User, { UserDocument, UserReq } from '../models/user.model';
 import { CustomDeleteRequest, CustomUpdateRequest } from '../utils/interface';
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -58,6 +58,25 @@ export const getUser = async (req: Request, res: Response) => {
 
       res.status(200).json(other);
     }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
+
+export const getFriends = async (req: Request, res: Response) => {
+  try {
+    const user = (await User.findById(req.params.userId)) as UserDocument;
+    const friends = await Promise.all(
+      user.followins.map((friendId) => {
+        return User.findById(friendId);
+      })
+    );
+    const friendList = [] as UserReq[];
+    friends.forEach((friend) => {
+      const { _id, username, profilePicture } = friend as UserDocument;
+      friendList.push({ _id, username, profilePicture });
+    });
+    res.status(200).json(friendList);
   } catch (err) {
     res.status(500).json(err);
   }

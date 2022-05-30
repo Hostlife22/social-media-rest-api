@@ -17,6 +17,12 @@ export interface UserDocument extends mongoose.Document {
   updatedAt: Date;
 }
 
+export interface UserReq {
+  _id: string;
+  username: string;
+  profilePicture: string;
+}
+
 const UserSchema = new mongoose.Schema(
   {
     username: {

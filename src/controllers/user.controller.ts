@@ -51,12 +51,12 @@ export const getUser = async (req: Request, res: Response) => {
       ? await User.findById(userId)
       : await User.findOne({ username });
 
-    console.log(user);
-
     if (user) {
       const { password, updatedAt, ...other } = user.toJSON();
 
       res.status(200).json(other);
+    } else {
+      res.status(403).json({});
     }
   } catch (err) {
     res.status(500).json(err);

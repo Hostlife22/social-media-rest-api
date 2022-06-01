@@ -4,7 +4,9 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
 import authRoute from './routes/auth.route';
+import conversationRoute from './routes/conversation.route';
 import fileRoute from './routes/file.route';
+import messageRoute from './routes/message.route';
 import postRoute from './routes/post.route';
 import userRoute from './routes/users.route';
 
@@ -28,6 +30,9 @@ app.use('/api/upload', fileRoute);
 app.use('/api/users', userRoute);
 app.use('/api/auth', authRoute);
 app.use('/api/posts', postRoute);
+
+app.use('/api/conversations', conversationRoute);
+app.use('/api/messages', messageRoute);
 
 app.listen(PORT, () => {
   console.log(`App listening on d the port ${PORT}`);

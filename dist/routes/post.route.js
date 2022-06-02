@@ -1,13 +1,20 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const post_controller_1 = require("../controllers/post.controller");
-const router = (0, express_1.Router)();
-router.post('/', post_controller_1.createPost);
-router.put('/:id', post_controller_1.updatePost);
-router.delete('/:id', post_controller_1.deletePost);
-router.put('/:id/like', post_controller_1.likePost);
-router.get('/:id', post_controller_1.getPost);
-router.get('/timeline/:userId', post_controller_1.getTimelinePost);
-router.get('/profile/:username', post_controller_1.getUserPosts);
-exports.default = router;
+import { Router } from 'express';
+import {
+  createPost,
+  deletePost,
+  getPost,
+  getTimelinePost,
+  getUserPosts,
+  likePost,
+  updatePost
+} from '../controllers/post.controller.js';
+
+const router = Router();
+router.post('/', createPost);
+router.put('/:id', updatePost);
+router.delete('/:id', deletePost);
+router.put('/:id/like', likePost);
+router.get('/:id', getPost);
+router.get('/timeline/:userId', getTimelinePost);
+router.get('/profile/:username', getUserPosts);
+export default router;

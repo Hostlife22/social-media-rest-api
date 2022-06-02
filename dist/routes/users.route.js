@@ -1,12 +1,18 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const user_controller_1 = require("../controllers/user.controller");
-const router = (0, express_1.Router)();
-router.put('/:id', user_controller_1.updateUser);
-router.delete('/:id', user_controller_1.deleteUser);
-router.get('/', user_controller_1.getUser);
-router.get('/friends/:userId', user_controller_1.getFriends);
-router.put('/:id/follow', user_controller_1.followUser);
-router.put('/:id/unfollow', user_controller_1.unfollowUser);
-exports.default = router;
+import { Router } from 'express';
+import {
+  deleteUser,
+  followUser,
+  getFriends,
+  getUser,
+  unfollowUser,
+  updateUser
+} from '../controllers/user.controller.js';
+
+const router = Router();
+router.put('/:id', updateUser);
+router.delete('/:id', deleteUser);
+router.get('/', getUser);
+router.get('/friends/:userId', getFriends);
+router.put('/:id/follow', followUser);
+router.put('/:id/unfollow', unfollowUser);
+export default router;

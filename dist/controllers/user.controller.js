@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -19,27 +18,22 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.unfollowUser = exports.followUser = exports.getFriends = exports.getUser = exports.deleteUser = exports.updateUser = void 0;
-const bcrypt_1 = __importDefault(require("bcrypt"));
-const user_model_1 = __importDefault(require("../models/user.model"));
-const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+import bcrypt from 'bcrypt';
+import User from '../models/user.model.js';
+export const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body, user, params } = req;
     if (body.userId === params.id || user.isAdmin) {
         if (body.password) {
             try {
-                const salt = yield bcrypt_1.default.genSalt(10);
-                req.body.password = yield bcrypt_1.default.hash(body.password, salt);
+                const salt = yield bcrypt.genSalt(10);
+                req.body.password = yield bcrypt.hash(body.password, salt);
             }
             catch (err) {
                 return res.status(500).json(err);
             }
         }
         try {
-            yield user_model_1.default.findByIdAndUpdate(params.id, {
+            yield User.findByIdAndUpdate(params.id, {
                 $set: req.body,
             });
             res.status(200).json('Account has been updated');
@@ -52,12 +46,11 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(403).json('You can update only your account!');
     }
 });
-exports.updateUser = updateUser;
-const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { body, params } = req;
     if (body.userId === params.id || body.isAdmin) {
         try {
-            yield user_model_1.default.findByIdAndDelete(params.id);
+            yield User.findByIdAndDelete(params.id);
             res.status(200).json('Account has been delete');
         }
         catch (err) {
@@ -68,14 +61,13 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(403).json('You can delete only your account!');
     }
 });
-exports.deleteUser = deleteUser;
-const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.query;
     const { username } = req.query;
     try {
         const user = userId
-            ? yield user_model_1.default.findById(userId)
-            : yield user_model_1.default.findOne({ username });
+            ? yield User.findById(userId)
+            : yield User.findOne({ username });
         if (user) {
             const _a = user.toJSON(), { password, updatedAt } = _a, other = __rest(_a, ["password", "updatedAt"]);
             res.status(200).json(other);
@@ -88,12 +80,11 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).json(err);
     }
 });
-exports.getUser = getUser;
-const getFriends = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const getFriends = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const user = (yield user_model_1.default.findById(req.params.userId));
+        const user = (yield User.findById(req.params.userId));
         const friends = yield Promise.all(user.followins.map((friendId) => {
-            return user_model_1.default.findById(friendId);
+            return User.findById(friendId);
         }));
         const friendList = [];
         friends.forEach((friend) => {
@@ -106,12 +97,11 @@ const getFriends = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).json(err);
     }
 });
-exports.getFriends = getFriends;
-const followUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const followUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = yield user_model_1.default.findById(req.params.id);
-            const currentUser = yield user_model_1.default.findById(req.body.userId);
+            const user = yield User.findById(req.params.id);
+            const currentUser = yield User.findById(req.body.userId);
             if (!(user === null || user === void 0 ? void 0 : user.followers.includes(req.body.userId))) {
                 yield (user === null || user === void 0 ? void 0 : user.updateOne({ $push: { followers: req.body.userId } }));
                 yield (currentUser === null || currentUser === void 0 ? void 0 : currentUser.updateOne({ $push: { followins: req.params.id } }));
@@ -129,12 +119,11 @@ const followUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(403).json('You can follow yourself');
     }
 });
-exports.followUser = followUser;
-const unfollowUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+export const unfollowUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.body.userId !== req.params.id) {
         try {
-            const user = yield user_model_1.default.findById(req.params.id);
-            const currentUser = yield user_model_1.default.findById(req.body.userId);
+            const user = yield User.findById(req.params.id);
+            const currentUser = yield User.findById(req.body.userId);
             if (user === null || user === void 0 ? void 0 : user.followers.includes(req.body.userId)) {
                 yield (user === null || user === void 0 ? void 0 : user.updateOne({ $pull: { followers: req.body.userId } }));
                 yield (currentUser === null || currentUser === void 0 ? void 0 : currentUser.updateOne({ $pull: { followins: req.params.id } }));
@@ -152,4 +141,3 @@ const unfollowUser = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(403).json('You can unfollow yourself');
     }
 });
-exports.unfollowUser = unfollowUser;

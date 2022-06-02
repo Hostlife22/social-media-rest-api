@@ -10,8 +10,8 @@ export interface CustomUpdateRequest extends Request {
 }
 
 export interface IBody {
-  userId: string;
   isAdmin?: boolean;
+  userId: string;
 }
 
 export interface CustomDeleteRequest extends CustomRequest<IBody> {}

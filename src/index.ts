@@ -21,6 +21,7 @@ mongoose.connect(process.env.MONGO_URL as string, () => {
 
 app.use('/images', express.static('public/images'));
 
+// middleware
 app.use(express.json());
 app.use(helmet());
 app.use(morgan('common'));

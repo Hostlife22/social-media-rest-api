@@ -10,5 +10,5 @@
 - [Morgan](https://www.npmjs.com/package/morgan)
 - [multer](https://www.npmjs.com/package/multer)
 - [Eslint](https://eslint.org/)
-- [Eslint](https://www.npmjs.com/package/prettier)
+- [Prettier](https://www.npmjs.com/package/prettier)
 
